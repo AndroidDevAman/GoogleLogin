@@ -3,34 +3,47 @@ package com.example.firebaseapplication
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.view.ViewGroup
+import android.os.Handler
+import android.os.Looper
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.firebase.analytics.FirebaseAnalytics
 
 
 class MainActivity : AppCompatActivity(), GoogleHelper.GoogleHelperCallback {
+
     private lateinit var googleHelper: GoogleHelper
+    val CUSTOM_PREF_NAME = "User_data"
+    var pref: SharedPreferenceHelper? = null
+    var buttonLogin: Button? = null
+    var buttonLogOut: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        SharedPreferenceHelper(this).init()
+        pref = SharedPreferenceHelper.getInstance()
         googleHelper = GoogleHelper(this, this)
+        findIds()
+        manageButtons()
 
-        val crashButton = Button(this)
-        crashButton.text = "Google Login"
-        crashButton.setOnClickListener {
-            if (hasNetwork()) {
-                googleHelper.signIn()
-            } else
-                Toast.makeText(this, "Please check internet connection", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun manageButtons() {
+        if (pref?.getUserName() != null) {
+            buttonLogOut?.visibility = View.VISIBLE
+            buttonLogin?.visibility = View.GONE
+        } else {
+            buttonLogOut?.visibility = View.GONE
+            buttonLogin?.visibility = View.VISIBLE
         }
+    }
 
-        addContentView(crashButton, ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT))
+    private fun findIds() {
+        buttonLogin = findViewById<Button>(R.id.login)
+        buttonLogOut = findViewById<Button>(R.id.logOut)
     }
 
     override fun onSuccessGoogle(account: GoogleSignInAccount?) {
@@ -41,7 +54,11 @@ class MainActivity : AppCompatActivity(), GoogleHelper.GoogleHelperCallback {
         if (account == null) {
             return
         }
-        Toast.makeText(this, account.givenName, Toast.LENGTH_SHORT).show()
+        pref?.saveUserName(account.givenName)
+        buttonLogOut?.visibility = View.VISIBLE
+        buttonLogin?.visibility = View.GONE
+        Toast.makeText(this, pref?.getUserName(), Toast.LENGTH_SHORT).show()
+
     }
 
     override fun onErrorGoogle() {
@@ -63,6 +80,27 @@ class MainActivity : AppCompatActivity(), GoogleHelper.GoogleHelperCallback {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         googleHelper.onResult(requestCode, resultCode, data)
+    }
+
+    fun onClickLogin(view: View) {
+        if (hasNetwork()) {
+            googleHelper.signIn()
+        } else
+            Toast.makeText(this, "Please check internet connection", Toast.LENGTH_SHORT).show()
+    }
+
+    fun onClickLogOut(view: View) {
+        if (hasNetwork()) {
+            googleHelper.signOut()
+            pref?.clearAll()
+            Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                Toast.makeText(this, "Logout Successfully", Toast.LENGTH_SHORT).show()
+                buttonLogOut?.visibility = View.GONE
+                buttonLogin?.visibility = View.VISIBLE
+            }, 1500)
+
+        } else
+            Toast.makeText(this, "Please check internet connection", Toast.LENGTH_SHORT).show()
     }
 
 }

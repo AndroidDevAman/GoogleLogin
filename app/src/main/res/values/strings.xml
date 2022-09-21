@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FireBaseApplication</string>
+    <string name="google_login">Google Login</string>
+    <string name="google_logout">Google Logout</string>
 </resources>
