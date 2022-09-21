@@ -3,26 +3,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
 
-    <Button
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:src="@drawable/google" />
+
+    <TextView
         android:id="@+id/login"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="30dp"
         android:onClick="onClickLogin"
-        android:visibility="visible"
-        android:text="@string/google_login" />
+        android:gravity="center"
+        android:background="@drawable/login_drawble"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:text="@string/google_login"
+        android:visibility="visible" />
 
-
-    <Button
+    <TextView
         android:id="@+id/logOut"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="30dp"
         android:onClick="onClickLogOut"
-        android:visibility="gone"
-        android:text="@string/google_logout" />
+        android:gravity="center"
+        android:background="@drawable/login_drawble"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:text="@string/google_logout"
+        android:visibility="gone" />
 
 
 </LinearLayout>

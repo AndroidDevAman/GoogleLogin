@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -17,8 +18,8 @@ class MainActivity : AppCompatActivity(), GoogleHelper.GoogleHelperCallback {
     private lateinit var googleHelper: GoogleHelper
     val CUSTOM_PREF_NAME = "User_data"
     var pref: SharedPreferenceHelper? = null
-    var buttonLogin: Button? = null
-    var buttonLogOut: Button? = null
+    var buttonLogin: TextView? = null
+    var buttonLogOut: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +43,8 @@ class MainActivity : AppCompatActivity(), GoogleHelper.GoogleHelperCallback {
     }
 
     private fun findIds() {
-        buttonLogin = findViewById<Button>(R.id.login)
-        buttonLogOut = findViewById<Button>(R.id.logOut)
+        buttonLogin = findViewById<TextView>(R.id.login)
+        buttonLogOut = findViewById<TextView>(R.id.logOut)
     }
 
     override fun onSuccessGoogle(account: GoogleSignInAccount?) {
